@@ -6,7 +6,7 @@
 const AUTH = {
   // Configuration
   clientId: "f2205c93492a43b9b6fb67b91bcb942b", // To be filled by the user
-  redirectUri: "http://127.0.0.1:3000/",
+  redirectUri: window.location.origin + window.location.pathname,
   scopes: ["user-library-read"],
   tokenEndpoint: "https://accounts.spotify.com/api/token",
 
