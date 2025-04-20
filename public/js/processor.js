@@ -411,8 +411,8 @@ const PROCESSOR = {
   },
 
   /**
-   * Get statistics about the processed data
-   * @returns {Object} - Statistics
+   * Get statistics about the processed albums data
+   * @returns {Object} - Statistics for albums
    */
   getStats() {
     return {
@@ -421,6 +421,114 @@ const PROCESSOR = {
         (total, album) => total + album.songCount,
         0
       ),
+    };
+  },
+
+  // ---------------------
+  // Artists Processing
+  // ---------------------
+  /**
+   * Array of processed artists data
+   */
+  artists: [],
+
+  /**
+   * Process liked songs to find top artists
+   * @param {Array} likedSongs - Array of liked songs from Spotify API
+   * @returns {Array} - Processed artist data
+   */
+  processArtists(likedSongs) {
+    if (!likedSongs || likedSongs.length === 0) {
+      return [];
     }
+    const groups = {};
+    likedSongs.forEach((song) => {
+      const artist = song.artists[0];
+      if (!artist) return;
+      const id = artist.id;
+      if (!groups[id]) {
+        groups[id] = {
+          id,
+          name: artist.name,
+          songCount: 0,
+          albumIds: new Set(),
+        };
+      }
+      groups[id].songCount++;
+      groups[id].albumIds.add(song.album.id);
+    });
+    const artistsArr = Object.values(groups).map((entry) => ({
+      id: entry.id,
+      name: entry.name,
+      songCount: entry.songCount,
+      albumCount: entry.albumIds.size,
+    }));
+    // Default sort by most liked songs
+    artistsArr.sort((a, b) => b.songCount - a.songCount);
+    this.artists = artistsArr;
+    return artistsArr;
+  },
+
+  /**
+   * Search artists by name
+   * @param {Array} artists - Array of artist objects
+   * @param {string} query - Search query
+   * @returns {Array} - Filtered artists
+   */
+  searchArtists(artists, query) {
+    if (!query || query.trim() === "") {
+      return artists;
+    }
+    const normalizedQuery = query.toLowerCase().trim();
+    return artists.filter((artist) =>
+      artist.name.toLowerCase().includes(normalizedQuery)
+    );
+  },
+
+  /**
+   * Sort artists by various criteria
+   * @param {Array} artists - Array of artist objects
+   * @param {string} sortBy - Sort key
+   * @returns {Array} - Sorted artists array
+   */
+  sortArtists(artists, sortBy) {
+    const sorted = [...artists];
+    switch (sortBy) {
+      case "songCount-asc":
+        sorted.sort((a, b) => a.songCount - b.songCount);
+        break;
+      case "songCount-desc":
+        sorted.sort((a, b) => b.songCount - a.songCount);
+        break;
+      case "albumCount-asc":
+        sorted.sort((a, b) => a.albumCount - b.albumCount);
+        break;
+      case "albumCount-desc":
+        sorted.sort((a, b) => b.albumCount - a.albumCount);
+        break;
+      case "name-asc":
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        sorted.sort((a, b) => b.name.localeCompare(a.name));
+        break;
+      default:
+        sorted.sort((a, b) => b.songCount - a.songCount);
+    }
+    return sorted;
+  },
+
+  /**
+   * Get statistics about the processed artists data
+   * @returns {Object} - Statistics for artists
+   */
+  getArtistStats() {
+    return {
+      totalArtists: this.artists.length,
+      totalSongs: this.artists.reduce(
+        (sum, artist) => sum + artist.songCount,
+        0
+      ),
+    };
   },
 }

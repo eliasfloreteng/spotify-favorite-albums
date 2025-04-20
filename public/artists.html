@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Spotify Favorite Albums</title>
+    <title>Spotify Top Artists</title>
     <link rel="stylesheet" href="css/styles.css" />
     <link
       rel="icon"
@@ -13,11 +13,11 @@
   <body>
     <div class="container">
       <header>
-        <h1>Spotify Favorite Albums</h1>
-        <p>Discover which albums contain most of your liked songs</p>
+        <h1>Spotify Top Artists</h1>
+        <p>Discover which artists feature most in your liked songs</p>
         <nav>
-          <a href="index.html" class="active">Albums</a>
-          <a href="artists.html">Artists</a>
+          <a href="index.html">Albums</a>
+          <a href="artists.html" class="active">Artists</a>
         </nav>
       </header>
 
@@ -39,26 +39,26 @@
             <input
               type="text"
               id="search-input"
-              placeholder="Search albums..."
+              placeholder="Search artists..."
             />
           </div>
           <div class="sort-container">
             <label for="sort-select">Sort by:</label>
             <select id="sort-select">
-              <option value="count-desc">Most liked songs (default)</option>
-              <option value="count-asc">Least liked songs</option>
-              <option value="name-asc">Album name (A-Z)</option>
-              <option value="name-desc">Album name (Z-A)</option>
-              <option value="artist-asc">Artist name (A-Z)</option>
-              <option value="artist-desc">Artist name (Z-A)</option>
+              <option value="songCount-desc">Most liked songs (default)</option>
+              <option value="songCount-asc">Least liked songs</option>
+              <option value="albumCount-desc">Most albums</option>
+              <option value="albumCount-asc">Least albums</option>
+              <option value="name-asc">Artist name (A-Z)</option>
+              <option value="name-desc">Artist name (Z-A)</option>
             </select>
           </div>
         </div>
         <div id="stats-summary">
-          <p>Total albums: <span id="total-albums">0</span></p>
+          <p>Total artists: <span id="total-artists">0</span></p>
           <p>Total liked songs: <span id="total-songs">0</span></p>
         </div>
-        <div id="albums-container"></div>
+        <div id="artists-container"></div>
       </div>
 
       <div id="error-section" class="section hidden">
@@ -74,11 +74,10 @@
       </footer>
     </div>
 
-    <!-- JavaScript Files -->
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
     <script src="js/processor.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/artists-ui.js"></script>
+    <script src="js/artists.js"></script>
   </body>
 </html>
